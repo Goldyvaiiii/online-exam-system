@@ -37,7 +37,17 @@ const isTeacher = (req, res, next) => {
     }
 };
 
+// Middleware to check if the logged-in user is a student
+const isStudent = (req, res, next) => {
+    if (req.user && req.user.role === 'student') {
+        next();
+    } else {
+        res.status(403).json({ error: 'Access denied. Only students can perform this action.' });
+    }
+};
+
 module.exports = {
     verifyToken,
-    isTeacher
+    isTeacher,
+    isStudent
 };
