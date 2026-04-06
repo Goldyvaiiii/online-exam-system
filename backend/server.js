@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const authRoutes = require('./routes/authRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -17,6 +18,9 @@ app.use(express.json());
 // Connect the authentication routes
 // Now all endpoints inside authRoutes are prefixed with '/api/auth'
 app.use('/api/auth', authRoutes);
+
+// Connect the teacher protected routes
+app.use('/api/teacher', teacherRoutes);
 
 // Simple test route to verify the database connection
 // We use async/await here because database operations take time
