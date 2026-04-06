@@ -3,7 +3,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { createExam, addQuestion, getTeacherExams } = require('../controllers/teacherController');
+const { createExam, addQuestion, getTeacherExams, getExamResults } = require('../controllers/teacherController');
 
 // Import our security middleware
 const { verifyToken, isTeacher } = require('../middleware/authMiddleware');
@@ -20,5 +20,8 @@ router.get('/exams', getTeacherExams);
 
 // POST /api/teacher/exams/:examId/questions -> Add a new question to an exam
 router.post('/exams/:examId/questions', addQuestion);
+
+// GET /api/teacher/exams/:examId/results -> Fetch student scores
+router.get('/exams/:examId/results', getExamResults);
 
 module.exports = router;

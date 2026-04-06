@@ -91,8 +91,38 @@ const getTeacherExams = async (req, res) => {
     }
 };
 
+// @desc    Get results for a specific exam created by this teacher
+// @route   GET /api/teacher/exams/:examId/results
+const getExamResults = async (req, res) => {
+    try {
+        const { examId } = req.params;
+        const teacher_id = req.user.id;
+
+        // Security: Ensure this teacher actually owns the exam before showing results!
+        const [exams] = await db.query('SELECT id FROM exams WHERE id = ? AND teacher_id = ?', [examId, teacher_id]);
+        if (exams.length === 0) {
+            return res.status(403).json({ error: 'Not authorized to view these results' });
+        }
+
+        // Fetch results and join with the User table to get the student's name
+        const [results] = await db.query(`
+            SELECT r.id, r.score, r.total_questions, r.submitted_at, u.name as student_name, u.email as student_email
+            FROM results r
+            JOIN users u ON r.student_id = u.id
+            WHERE r.exam_id = ?
+            ORDER BY r.score DESC, r.submitted_at ASC
+        `, [examId]);
+
+        res.status(200).json(results);
+    } catch (error) {
+        console.error('Error fetching exam results:', error);
+        res.status(500).json({ error: 'Server error while fetching results' });
+    }
+};
+
 module.exports = {
     createExam,
     addQuestion,
-    getTeacherExams
+    getTeacherExams,
+    getExamResults
 };

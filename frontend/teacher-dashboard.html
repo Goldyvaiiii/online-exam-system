@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Module | Nexus AI Exams</title>
+    <!-- We load our global style, then the dashboard specific style -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="nav-brand">Nexus Teacher Config</div>
+        <div class="nav-links">
+            <span id="userNameDisplay">Welcome, Teacher</span>
+            <button id="logoutBtn" class="btn-small">Disconnect</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation Menu -->
+        <aside class="sidebar">
+            <button class="menu-btn active" data-target="view-exams">My Network Exams</button>
+            <button class="menu-btn" data-target="create-exam">Deploy New Exam</button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <div id="messageBox" class="message" style="display: none;"></div>
+            
+            <!-- Section 1: View Exams -->
+            <section id="view-exams" class="panel active">
+                <h2>Active Exam Modules</h2>
+                <div class="grid-container" id="examsList">
+                    <!-- Exams will be dynamically injected here by teacher.js -->
+                </div>
+            </section>
+
+            <!-- Section 2: Create Exam Form -->
+            <section id="create-exam" class="panel hidden">
+                <h2>Configure New Exam Module</h2>
+                <form id="createExamForm" style="max-width: 500px;">
+                    <div class="form-group">
+                        <label>Exam Title (e.g. Logic Gate Assessment)</label>
+                        <input type="text" id="examTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject Topic (e.g. Computer Science)</label>
+                        <input type="text" id="examSubject" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Exam Duration (in minutes)</label>
+                        <input type="number" id="examDuration" class="form-control" required min="1" value="30">
+                    </div>
+                    <button type="submit" class="btn">Deploy to Network</button>
+                </form>
+            </section>
+
+            <!-- Section 3: Exam Manager Sub-Panel (Hidden by default, opened when clicking 'Manage' on an exam) -->
+            <section id="exam-manager" class="panel hidden">
+                <button class="action-btn mb-1" id="backToExams">← Terminate View & Go Back</button>
+                <h2 id="managerExamTitle">Exam Manager</h2>
+                
+                <div class="manager-layout">
+                    <!-- Left column: Add new questions -->
+                    <div class="manager-half">
+                        <h3>Append Question</h3>
+                        <form id="addQuestionForm">
+                            <div class="form-group">
+                                <label>Question Data</label>
+                                <textarea id="qText" class="form-control" required rows="3" placeholder="What does HTML stand for?"></textarea>
+                            </div>
+                            <!-- Options: Notice how we use a radio button so only ONE is marked correct -->
+                            <div class="form-group option-group">
+                                <label>Option A <small>(Select ratio to mark correct)</small></label>
+                                <div class="option-row">
+                                    <input type="radio" name="correctOpt" value="0" required>
+                                    <input type="text" id="opt0" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group option-group">
+                                <label>Option B</label>
+                                <div class="option-row">
+                                    <input type="radio" name="correctOpt" value="1">
+                                    <input type="text" id="opt1" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group option-group">
+                                <label>Option C</label>
+                                <div class="option-row">
+                                    <input type="radio" name="correctOpt" value="2">
+                                    <input type="text" id="opt2" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group option-group">
+                                <label>Option D</label>
+                                <div class="option-row">
+                                    <input type="radio" name="correctOpt" value="3">
+                                    <input type="text" id="opt3" class="form-control" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn">Inject Question</button>
+                        </form>
+                    </div>
+
+                    <!-- Right column: View student submissions and scores for this exam -->
+                    <div class="manager-half">
+                        <h3>Received Student Analytics</h3>
+                        <div id="resultsList" class="results-container">
+                            <!-- Results inject here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loaded logic script specifically for Teacher role -->
+    <script src="js/teacher.js"></script>
+</body>
+</html>
