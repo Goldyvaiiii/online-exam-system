@@ -222,3 +222,34 @@
     font-weight: bold;
     color: var(--success-color);
 }
+
+/* Responsive Navigation adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    /* Convert sidebar into a horizontal top bar */
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 1rem;
+    }
+    
+    .menu-btn {
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
+    }
+    
+    .navbar {
+        padding: 1.5rem 1rem;
+    }
+    
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+}
