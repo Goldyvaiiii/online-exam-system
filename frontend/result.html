@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Result | Nexus AI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="flex-direction: column; text-align: center;">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="auth-container" style="max-width: 600px;">
+        <h1 style="color: var(--accent-glow); margin-bottom: 1rem;">Evaluation Complete</h1>
+        <p>Your encrypted data sequence has been successfully processed.</p>
+        
+        <!-- Big Number representation -->
+        <div style="font-size: 5rem; font-weight: 700; color: var(--success-color); margin: 2rem 0;">
+            <span id="scoreDisplay">0</span> / <span id="totalDisplay">0</span>
+        </div>
+        
+        <p id="percentageDisplay" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2.5rem;">0% Integrity Match</p>
+
+        <a href="student-dashboard.html" class="btn" style="display:inline-block; text-decoration:none;">Return to Node Dashboard</a>
+    </div>
+
+    <!-- Very short inline JS because it literally just parses a Session Storage object! -->
+    <script>
+        const resultString = sessionStorage.getItem('lastResult');
+        // If they navigate manually to result.html, boot them!
+        if (!resultString) {
+            window.location.href = 'student-dashboard.html';
+        } else {
+            const data = JSON.parse(resultString);
+            document.getElementById('scoreDisplay').textContent = data.score;
+            document.getElementById('totalDisplay').textContent = data.total_questions;
+            
+            // Handle edgecases like 0 divide by 0
+            if (data.total_questions > 0) {
+                const perc = Math.round((data.score / data.total_questions) * 100);
+                document.getElementById('percentageDisplay').textContent = `${perc}% Accuracy Detected`;
+            }
+        }
+    </script>
+</body>
+</html>
