@@ -1,12 +1,13 @@
 /* frontend/css/style.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-color: #f3f4f6;
+    --bg-color: #f0f4f8; /* Soft blue-gray */
     --card-bg: #ffffff;
-    --text-primary: #1f2937;
-    --text-secondary: #4b5563;
-    --accent-glow: #2563eb;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent-glow: #6366f1; /* Vibrant Indigo */
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); /* Vibrant purple/indigo gradient */
     --error-color: #ef4444;
     --success-color: #10b981;
 }
@@ -15,11 +16,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif; /* Modern, clean, slightly rounded font */
 }
 
 body {
-    background-color: var(--bg-color);
+    /* Beautiful, subtle vibrant background */
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+    background-size: cover;
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
@@ -30,10 +33,11 @@ body {
 .auth-container {
     background: var(--card-bg);
     padding: 3rem;
-    border-radius: 12px;
+    border-radius: 16px;
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    max-width: 420px;
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15); /* Colorful shadow */
+    border: 1px solid rgba(255,255,255,0.6);
 }
 
 .auth-header {
@@ -42,14 +46,17 @@ body {
 }
 
 .auth-header h1 {
-    font-size: 1.8rem;
-    color: var(--accent-glow);
+    font-size: 2rem;
+    /* Gradient text for the title */
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
 }
 
 .auth-header p {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .form-group {
@@ -59,7 +66,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--text-primary);
 }
@@ -67,34 +74,37 @@ body {
 .form-control {
     width: 100%;
     padding: 0.8rem 1rem;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
     color: var(--text-primary);
     outline: none;
-    transition: 0.2s;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-control:focus {
-    border-color: var(--accent-glow);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #818cf8;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .btn {
     width: 100%;
     padding: 1rem;
     border: none;
-    border-radius: 8px;
-    background: var(--accent-glow);
+    border-radius: 10px;
+    background: var(--primary-gradient);
     color: white;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.3s;
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.4);
 }
 
 .btn:hover {
-    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -3px rgba(99, 102, 241, 0.5);
 }
 
 .auth-footer {
@@ -105,6 +115,7 @@ body {
 
 .auth-footer a {
     color: var(--accent-glow);
+    font-weight: 600;
     text-decoration: none;
 }
 
@@ -113,22 +124,23 @@ body {
 }
 
 .message {
-    padding: 0.8rem;
-    border-radius: 8px;
+    padding: 1rem;
+    border-radius: 10px;
     margin-bottom: 1rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     display: none;
 }
 .message.error {
     background: #fef2f2;
-    border: 1px solid var(--error-color);
-    color: var(--error-color);
+    border: 1px dashed var(--error-color);
+    color: #b91c1c;
     display: block;
 }
 .message.success {
     background: #f0fdf4;
-    border: 1px solid var(--success-color);
-    color: var(--success-color);
+    border: 1px dashed var(--success-color);
+    color: #047857;
     display: block;
 }
 
