@@ -1,5 +1,5 @@
 // frontend/js/student.js
-const API_URL = 'http://localhost:5000/api/student';
+const API_URL = 'http://localhost:5001/api/student';
 
 // Validate their passcard (JWT Token)
 const token = localStorage.getItem('token');
