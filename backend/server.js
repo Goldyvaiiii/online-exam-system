@@ -2,6 +2,7 @@
 // Main entry point for the backend API server
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const db = require('./db');
 const authRoutes = require('./routes/authRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
@@ -25,6 +26,9 @@ app.use('/api/teacher', teacherRoutes);
 
 // Connect the student protected routes
 app.use('/api/student', studentRoutes);
+
+// Serve the frontend files statically so everything is easily accessible on port 5000!
+app.use('/', express.static(path.join(__dirname, '../frontend')));
 
 // Simple test route to verify the database connection
 // We use async/await here because database operations take time
