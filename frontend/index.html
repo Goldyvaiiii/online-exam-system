@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Nexus AI Exams</title>
+    <title>Login | Online Exam System</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Background Animated Orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
     <div class="auth-container">
         <div class="auth-header">
-            <h1>Nexus Exams</h1>
-            <p>Enter your credentials to continue</p>
+            <h1>Student & Teacher Portal</h1>
+            <p>Welcome back! Please login to continue.</p>
         </div>
 
-        <!-- This div will show JavaScript errors or success messages -->
         <div id="messageBox" class="message"></div>
 
         <form id="loginForm">
@@ -31,15 +26,15 @@
                 <input type="password" id="password" class="form-control" required placeholder="••••••••">
             </div>
 
-            <button type="submit" class="btn">Initialize Session</button>
+            <button type="submit" class="btn">Login</button>
         </form>
 
         <div class="auth-footer">
-            <p>New to the network? <a href="register.html">Create an account</a></p>
+            <p>Don't have an account? <a href="register.html">Register here</a></p>
         </div>
     </div>
 
-    <!-- NOTE: We link our JavaScript at the very end so the HTML loads entirely first -->
+    <!-- We link our JavaScript at the very end so the HTML loads first -->
     <script src="js/auth.js"></script>
 </body>
 </html>

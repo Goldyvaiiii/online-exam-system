@@ -3,31 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Result | Nexus AI</title>
+    <title>Result | Online Exam System</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body style="flex-direction: column; text-align: center;">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
 
     <div class="auth-container" style="max-width: 600px;">
-        <h1 style="color: var(--accent-glow); margin-bottom: 1rem;">Evaluation Complete</h1>
-        <p>Your encrypted data sequence has been successfully processed.</p>
+        <h1 style="color: var(--text-primary); margin-bottom: 1rem;">Exam Completed</h1>
+        <p style="color: var(--text-secondary);">Your answers have been successfully submitted and graded.</p>
         
-        <!-- Big Number representation -->
         <div style="font-size: 5rem; font-weight: 700; color: var(--success-color); margin: 2rem 0;">
             <span id="scoreDisplay">0</span> / <span id="totalDisplay">0</span>
         </div>
         
-        <p id="percentageDisplay" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2.5rem;">0% Integrity Match</p>
+        <p id="percentageDisplay" style="font-size: 1.2rem; color: var(--text-primary); font-weight: 600; margin-bottom: 2.5rem;">0% Final Score</p>
 
-        <a href="student-dashboard.html" class="btn" style="display:inline-block; text-decoration:none;">Return to Node Dashboard</a>
+        <a href="student-dashboard.html" class="btn" style="display:inline-block; text-decoration:none;">Back to Dashboard</a>
     </div>
 
-    <!-- Very short inline JS because it literally just parses a Session Storage object! -->
     <script>
         const resultString = sessionStorage.getItem('lastResult');
-        // If they navigate manually to result.html, boot them!
         if (!resultString) {
             window.location.href = 'student-dashboard.html';
         } else {
@@ -35,10 +30,9 @@
             document.getElementById('scoreDisplay').textContent = data.score;
             document.getElementById('totalDisplay').textContent = data.total_questions;
             
-            // Handle edgecases like 0 divide by 0
             if (data.total_questions > 0) {
                 const perc = Math.round((data.score / data.total_questions) * 100);
-                document.getElementById('percentageDisplay').textContent = `${perc}% Accuracy Detected`;
+                document.getElementById('percentageDisplay').textContent = `${perc}% Final Grade`;
             }
         }
     </script>

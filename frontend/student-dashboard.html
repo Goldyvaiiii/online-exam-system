@@ -3,51 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Data Node | Nexus AI</title>
-    <!-- We reuse the dashboard styling here since it fits perfectly! -->
+    <title>Student | Online Exam System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
     <nav class="navbar">
-        <div class="nav-brand">Nexus Student Node</div>
+        <div class="nav-brand">Student Portal</div>
         <div class="nav-links">
-            <span id="userNameDisplay">Welcome, Operative</span>
-            <button id="logoutBtn" class="btn-small">Disconnect</button>
+            <span id="userNameDisplay">Welcome, Student</span>
+            <button id="logoutBtn" class="btn-small">Logout</button>
         </div>
     </nav>
 
     <div class="dashboard-container">
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <button class="menu-btn active" data-target="available-exams">Available Modules</button>
-            <button class="menu-btn" data-target="my-results">Performance History</button>
+            <button class="menu-btn active" data-target="available-exams">Available Exams</button>
+            <button class="menu-btn" data-target="my-results">My Results</button>
         </aside>
 
-        <!-- Dynamic View Panels -->
         <main class="content-area">
             <div id="messageBox" class="message" style="display: none;"></div>
             
             <section id="available-exams" class="panel active">
-                <h2>Awaiting Assessments</h2>
+                <h2>Exams Ready to Take</h2>
                 <div class="grid-container" id="examsList">
-                    <!-- Loaded dynamically via student.js -->
                 </div>
             </section>
 
             <section id="my-results" class="panel hidden">
-                <h2>Transmission Analytics</h2>
+                <h2>My Examination History</h2>
                 <div id="resultsList" class="results-container">
-                    <!-- Results loaded from backend history API -->
                 </div>
             </section>
         </main>
     </div>
-
-    <!-- Student Logic controller -->
     <script src="js/student.js"></script>
 </body>
 </html>

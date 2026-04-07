@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Session | Nexus AI</title>
+    <title>Exam | Online Exam System</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Specific Exam UI Overrides giving it an intense "Live Test" feel */
         .exam-header {
             position: fixed;
             top: 0; left: 0; width: 100%;
-            background: rgba(11, 15, 25, 0.9);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             padding: 1rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent-glow);
             z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* Essential feature: sticky pulse timer */
         .timer-display {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--error-color);
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
         }
-
-        /* This visually warns a student time is almost out in exam.js! */
-        @keyframes pulse { from { opacity: 0.5; transform: scale(0.95); } to { opacity: 1; transform: scale(1.05); } }
 
         .question-container {
             margin-top: 100px;
@@ -38,7 +32,8 @@
             background: var(--card-bg);
             padding: 3rem;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             text-align: left;
         }
 
@@ -50,18 +45,18 @@
 
         .option-label {
             display: block;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             padding: 1rem;
             margin-bottom: 1rem;
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
 
         .option-label:hover {
             border-color: var(--accent-glow);
-            background: rgba(59, 130, 246, 0.1);
+            background: #eff6ff;
         }
 
         .option-label input[type="radio"] {
@@ -78,52 +73,42 @@
 
         .btn-exam {
             padding: 0.8rem 1.5rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            border-radius: 6px;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: var(--text-primary);
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.3s;
+            font-weight: 600;
+            transition: 0.2s;
         }
 
-        .btn-exam:hover { background: rgba(59, 130, 246, 0.3); }
+        .btn-exam:hover { background: #f3f4f6; }
 
         .btn-submit {
             background: var(--success-color);
-            border-color: var(--success-color);
-            color: #000;
+            border: none;
+            color: white;
             font-weight: 700;
-            animation: fadeIn 0.4s;
         }
-        .btn-submit:hover { background: #16a34a; }
+        .btn-submit:hover { background: #059669; }
     </style>
 </head>
 <body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
     <div class="exam-header">
-        <h2 id="examTitleNav">Nexus Evaluator...</h2>
+        <h2 id="examTitleNav" style="color: var(--accent-glow);">Assessment</h2>
         <div class="timer-display" id="timer">--:--</div>
     </div>
 
-    <!-- Active Question Card -->
-    <!-- We hide it initially until our JS finishes downloading the test from API -->
     <div class="question-container" id="qContainer" style="display: none;">
-        <h4 style="color: var(--text-secondary); margin-bottom: 1rem;" id="qCounter">Segment - of -</h4>
-        <div class="question-text" id="qText">Downloading test module...</div>
+        <h4 style="color: var(--text-secondary); margin-bottom: 1rem;" id="qCounter">Question - of -</h4>
+        <div class="question-text" id="qText">Loading data...</div>
         
-        <div id="optionsWrapper">
-            <!-- Dynamic radio UI renders here -->
-        </div>
+        <div id="optionsWrapper"></div>
 
-        <!-- Pagination UI -->
         <div class="exam-controls">
-            <button class="btn-exam" id="prevBtn">← Previous Segment</button>
-            <button class="btn-exam" id="nextBtn" style="background: var(--primary-gradient);">Proceed →</button>
-            
-            <!-- Only shown on final question -->
-            <button class="btn-exam btn-submit" id="submitBtn" style="display:none;">TRANSMIT FINAL RESULTS</button>
+            <button class="btn-exam" id="prevBtn">← Previous</button>
+            <button class="btn" id="nextBtn" style="width:auto;">Next →</button>
+            <button class="btn-exam btn-submit" id="submitBtn" style="display:none;">FINISH & SUBMIT</button>
         </div>
     </div>
 
