@@ -120,9 +120,80 @@ const getExamResults = async (req, res) => {
     }
 };
 
+// --- ADVANCED PHASE 2 METHODS ---
+
+// @desc    Add a remark to a specific student's result
+// @route   POST /api/teacher/results/:resultId/remark
+const addRemark = async (req, res) => {
+    try {
+        const { resultId } = req.params;
+        const { remarks } = req.body;
+        await db.query('UPDATE results SET remarks = ? WHERE id = ?', [remarks, resultId]);
+        res.status(200).json({ message: 'Remark saved successfully' });
+    } catch (error) {
+        console.error('Error adding remark:', error);
+        res.status(500).json({ error: 'Server error while saving remark' });
+    }
+};
+
+// @desc    Get aggregate student records
+// @route   GET /api/teacher/records
+const getStudentRecords = async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT u.id, u.name, u.email, 
+                   COUNT(r.id) as total_exams, 
+                   ROUND(IFNULL(AVG((r.score / r.total_questions) * 100), 0), 2) as average_score
+            FROM users u
+            LEFT JOIN results r ON u.id = r.student_id
+            WHERE u.role = 'student'
+            GROUP BY u.id
+            ORDER BY average_score DESC
+        `);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching student records:', error);
+        res.status(500).json({ error: 'Server error fetching records' });
+    }
+};
+
+// @desc    Get all complaints
+// @route   GET /api/teacher/complaints
+const getComplaints = async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT c.*, u.name as student_name 
+            FROM complaints c 
+            JOIN users u ON c.student_id = u.id 
+            ORDER BY c.created_at DESC
+        `);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching complaints:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+// @desc    Resolve a complaint
+// @route   POST /api/teacher/complaints/:complaintId/resolve
+const resolveComplaint = async (req, res) => {
+    try {
+        const { complaintId } = req.params;
+        await db.query('UPDATE complaints SET status = "resolved" WHERE id = ?', [complaintId]);
+        res.status(200).json({ message: 'Complaint marked as resolved' });
+    } catch (error) {
+        console.error('Error resolving complaint:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     createExam,
     addQuestion,
     getTeacherExams,
-    getExamResults
+    getExamResults,
+    addRemark,
+    getStudentRecords,
+    getComplaints,
+    resolveComplaint
 };
