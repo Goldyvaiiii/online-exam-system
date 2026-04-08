@@ -1,0 +1,7 @@
+{
+  "name": "online-exam-system",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "cd backend && node server.js"
+  }
+}

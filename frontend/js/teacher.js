@@ -1,7 +1,7 @@
 // frontend/js/teacher.js
 // Handles all API interactions in the Teacher Dashboard
 
-const API_URL = 'http://localhost:5001/api/teacher';
+const API_URL = '/api/teacher';
 
 // Retrieve credentials from localStorage
 const token = localStorage.getItem('token');

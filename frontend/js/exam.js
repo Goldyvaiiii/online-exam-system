@@ -1,7 +1,7 @@
 // frontend/js/exam.js
 // Handles LIVE exam logic, pagination, and count-down timers!
 
-const API_URL = 'http://localhost:5001/api/student';
+const API_URL = '/api/student';
 const token = localStorage.getItem('token');
 if (!token) window.location.href = 'index.html';
 

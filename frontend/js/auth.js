@@ -2,7 +2,7 @@
 // Handles Login and Registration logic via the browser's Fetch API
 
 // NOTE: The backend runs on a different port (e.g. 5000), so we use the full localhost URL.
-const API_URL = 'http://localhost:5001/api/auth';
+const API_URL = '/api/auth';
 
 // Utility helper to show success/error messages in the UI
 function showMessage(text, isError = false) {
