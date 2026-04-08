@@ -35,6 +35,7 @@ menuBtns.forEach(btn => {
         // Refresh data every time a tab is clicked!
         if (targetSection.id === 'available-exams') loadAvailableExams();
         if (targetSection.id === 'my-results') loadMyResults();
+        if (targetSection.id === 'lodge-complaint') loadMyComplaints();
     });
 });
 
@@ -89,9 +90,10 @@ async function loadMyResults() {
             const card = document.createElement('div');
             card.className = 'result-card';
             card.innerHTML = `
-                <p><strong>Module:</strong> ${r.title} | ${r.subject}</p>
-                <p class="result-score" style="font-size: 1.1rem; margin-top: 5px;">Integrity Match: ${r.score} / ${r.total_questions} (${percentage}%)</p>
+                <p><strong>Exam:</strong> ${r.title} | ${r.subject}</p>
+                <p class="result-score" style="font-size: 1.1rem; margin-top: 5px;">Score: ${r.score} / ${r.total_questions} (${percentage}%)</p>
                 <p><small style="color: var(--text-secondary);">Processed: ${new Date(r.submitted_at).toLocaleString()}</small></p>
+                ${r.remarks ? `<div style="margin-top:1rem; padding:0.8rem; background:#eff6ff; border-left:4px solid var(--accent-glow); border-radius:6px;"><strong style="color:var(--text-primary);">📝 Teacher Remark:</strong><br>${r.remarks}</div>` : ''}
             `;
             resultsList.appendChild(card);
         });
@@ -102,3 +104,38 @@ async function loadMyResults() {
 
 // Auto fire on load
 loadAvailableExams();
+
+// --- ADVANCED PHASE 2 ---
+async function loadMyComplaints() {
+    try {
+        const res = await fetch(`${API_URL}/complaints`, { headers: { 'Authorization': `Bearer ${token}` }});
+        const data = await res.json();
+        const container = document.getElementById('myComplaintsList');
+        container.innerHTML = '';
+        if(data.length===0) return container.innerHTML='<p>No tickets sent.</p>';
+        data.forEach(c => {
+            const statusColor = c.status === 'resolved' ? 'var(--success-color)' : '#d97706';
+            container.innerHTML += `<div class="result-card">
+                <p><strong>Subject:</strong> ${c.subject}</p>
+                <p style="margin: 0.5rem 0;">${c.message}</p>
+                <p><small>Status: <strong style="color:${statusColor}">${c.status.toUpperCase()}</strong></small></p>
+            </div>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+document.getElementById('complaintForm')?.addEventListener('submit', async(e) => {
+    e.preventDefault();
+    const subject = document.getElementById('cSubject').value;
+    const message = document.getElementById('cMessage').value;
+    try {
+        await fetch(`${API_URL}/complaints`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject, message })
+        });
+        e.target.reset();
+        loadMyComplaints();
+        alert('Ticket submitted successfully! Teachers have been notified.');
+    } catch(err) { alert('Error submitting ticket'); }
+});

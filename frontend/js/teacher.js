@@ -71,6 +71,8 @@ menuBtns.forEach(btn => {
         if (targetSection.id === 'view-exams') {
             loadExams();
         }
+        if (targetSection.id === 'student-records') loadStudentRecords();
+        if (targetSection.id === 'complaints-manager') loadComplaints();
     });
 });
 
@@ -241,9 +243,13 @@ async function loadExamResults(examId) {
             const div = document.createElement('div');
             div.className = 'result-card';
             div.innerHTML = `
-                <p><strong>Operative:</strong> ${r.student_name} (${r.student_email})</p>
-                <p class="result-score">Integrity Score: ${r.score} / ${r.total_questions}</p>
+                <p><strong>Student:</strong> ${r.student_name} (${r.student_email})</p>
+                <p class="result-score">Score: ${r.score} / ${r.total_questions}</p>
                 <p><small>Time: ${new Date(r.submitted_at).toLocaleString()}</small></p>
+                <div style="margin-top:0.8rem; display:flex; gap:0.5rem; align-items:center;">
+                   <input type="text" id="remark_${r.id}" class="form-control" style="padding:0.4rem;" placeholder="Add instructor remark...">
+                   <button class="action-btn" style="margin-top:0;" onclick="saveRemark(${r.id})">Save</button>
+                </div>
             `;
             resultsList.appendChild(div);
         });
@@ -253,3 +259,64 @@ async function loadExamResults(examId) {
         document.getElementById('resultsList').innerHTML = '<p class="error">Failed to receive analytics uplink</p>';
     }
 }
+
+// --- ADVANCED PHASE 2 ---
+window.saveRemark = async (resultId) => {
+    const remarks = document.getElementById(`remark_${resultId}`).value;
+    try {
+        const res = await fetch(`${API_URL}/results/${resultId}/remark`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ remarks })
+        });
+        const data = await res.json();
+        showMessage(data.message, !res.ok);
+    } catch(err) {
+        showMessage('Error saving remark', true);
+    }
+};
+
+async function loadStudentRecords() {
+    try {
+        const res = await fetch(`${API_URL}/records`, { headers: { 'Authorization': `Bearer ${token}` }});
+        const records = await res.json();
+        const container = document.getElementById('recordsContainer');
+        container.innerHTML = '';
+        if(records.length===0) return container.innerHTML='<p>No student data available.</p>';
+        records.forEach(r => {
+            container.innerHTML += `<div class="result-card">
+                <h3>${r.name} <small style="color:var(--text-secondary); !important">(${r.email})</small></h3>
+                <p>Total Exams Completed: <strong class="result-score">${r.total_exams}</strong></p>
+                <p>Average Performance: <strong class="result-score">${r.average_score}%</strong></p>
+            </div>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+async function loadComplaints() {
+    try {
+        const res = await fetch(`${API_URL}/complaints`, { headers: { 'Authorization': `Bearer ${token}` }});
+        const complaints = await res.json();
+        const container = document.getElementById('complaintList');
+        container.innerHTML = '';
+        if(complaints.length===0) return container.innerHTML='<p>No incoming tickets.</p>';
+        complaints.forEach(c => {
+            const bg = c.status === 'resolved' ? '#f0fdf4' : '#fffbeb';
+            container.innerHTML += `<div class="result-card" style="background:${bg}">
+                <p><strong>From:</strong> ${c.student_name}</p>
+                <p><strong>Subject:</strong> ${c.subject}</p>
+                <p><strong>Message:</strong> ${c.message}</p>
+                <p><small>Status: ${c.status}</small></p>
+                ${c.status === 'pending' ? `<button class="action-btn" onclick="resolveComplaint(${c.id})">Mark Resolved</button>` : ''}
+            </div>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+window.resolveComplaint = async (id) => {
+    try {
+        await fetch(`${API_URL}/complaints/${id}/resolve`, { method:'POST', headers: { 'Authorization': `Bearer ${token}` }});
+        showMessage('Ticket resolved!');
+        loadComplaints();
+    } catch(e) { showMessage('Error resolving ticket', true); }
+};

@@ -20,6 +20,8 @@
         <aside class="sidebar">
             <button class="menu-btn active" data-target="view-exams">My Exams</button>
             <button class="menu-btn" data-target="create-exam">Create New Exam</button>
+            <button class="menu-btn" data-target="student-records">Global Records</button>
+            <button class="menu-btn" data-target="complaints-manager">Student Complaints</button>
         </aside>
 
         <main class="content-area">
@@ -100,6 +102,19 @@
                     </div>
                 </div>
             </section>
+
+            <section id="student-records" class="panel hidden">
+                <h2>Global Student Records</h2>
+                <div class="manager-half" style="max-width: 800px;">
+                    <div id="recordsContainer" class="results-container">Loading records...</div>
+                </div>
+            </section>
+
+            <section id="complaints-manager" class="panel hidden">
+                <h2>Support Tickets</h2>
+                <div id="complaintList" class="results-container">Loading complaints...</div>
+            </section>
+
         </main>
     </div>
     <script src="js/teacher.js"></script>

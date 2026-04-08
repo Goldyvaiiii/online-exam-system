@@ -114,7 +114,7 @@ const getStudentResults = async (req, res) => {
         
         // Use a JOIN to attach the exam title and subject to the result data
         const [results] = await db.query(`
-            SELECT r.id, r.score, r.total_questions, r.submitted_at, e.title, e.subject 
+            SELECT r.id, r.score, r.total_questions, r.remarks, r.submitted_at, e.title, e.subject 
             FROM results r
             JOIN exams e ON r.exam_id = e.id
             WHERE r.student_id = ?
@@ -128,9 +128,35 @@ const getStudentResults = async (req, res) => {
     }
 };
 
+// --- ADVANCED PHASE 2 METHODS ---
+const createComplaint = async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const { subject, message } = req.body;
+        await db.query('INSERT INTO complaints (student_id, subject, message) VALUES (?, ?, ?)', [studentId, subject, message]);
+        res.status(201).json({ message: 'Complaint submitted successfully' });
+    } catch (error) {
+        console.error('Error creating complaint:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const getStudentComplaints = async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const [complaints] = await db.query('SELECT * FROM complaints WHERE student_id = ? ORDER BY created_at DESC', [studentId]);
+        res.status(200).json(complaints);
+    } catch (error) {
+        console.error('Error fetching complaints:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 module.exports = {
     getAvailableExams,
     getExamDetails,
     submitExam,
-    getStudentResults
+    getStudentResults,
+    createComplaint,
+    getStudentComplaints
 };

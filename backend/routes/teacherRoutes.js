@@ -3,7 +3,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { createExam, addQuestion, getTeacherExams, getExamResults } = require('../controllers/teacherController');
+const { createExam, addQuestion, getTeacherExams, getExamResults, addRemark, getStudentRecords, getComplaints, resolveComplaint } = require('../controllers/teacherController');
 
 // Import our security middleware
 const { verifyToken, isTeacher } = require('../middleware/authMiddleware');
@@ -23,5 +23,11 @@ router.post('/exams/:examId/questions', addQuestion);
 
 // GET /api/teacher/exams/:examId/results -> Fetch student scores
 router.get('/exams/:examId/results', getExamResults);
+
+// --- ADVANCED PHASE 2 ROUTES ---
+router.post('/results/:resultId/remark', addRemark);
+router.get('/records', getStudentRecords);
+router.get('/complaints', getComplaints);
+router.post('/complaints/:complaintId/resolve', resolveComplaint);
 
 module.exports = router;
