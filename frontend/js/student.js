@@ -8,14 +8,14 @@ const userName = localStorage.getItem('userName');
 
 if (!token || userRole !== 'student') {
     // Intruders are kicked to the login screen!
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 }
 
 // GUI Hydration
 document.getElementById('userNameDisplay').textContent = `Welcome, ${userName || 'Operative'}`;
 document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.clear();
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 });
 
 // UI Panel Switching

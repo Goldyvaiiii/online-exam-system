@@ -3,7 +3,7 @@
 
 const API_URL = '/api/student';
 const token = localStorage.getItem('token');
-if (!token) window.location.href = 'index.html';
+if (!token) window.location.href = 'login.html';
 
 // Grab the specific exam 'id' straight from the URL parameters
 // e.g. exam.html?id=5

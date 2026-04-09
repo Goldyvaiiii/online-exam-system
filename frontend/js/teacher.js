@@ -13,7 +13,7 @@ const userName = localStorage.getItem('userName');
 // ------------------------------------
 // If they have no token or aren't actually a teacher, kick them to login!
 if (!token || userRole !== 'teacher') {
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 }
 
 // ------------------------------------
@@ -26,7 +26,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 });
 
 // Helper for temporary UI messages
