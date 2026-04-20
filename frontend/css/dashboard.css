@@ -87,9 +87,9 @@
 }
 
 .menu-btn.active {
-    background: var(--primary-gradient);
+    background: var(--accent-glow);
     color: #ffffff;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
 .content-area {
@@ -139,8 +139,8 @@
 
 .exam-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.05);
-    border-color: #c7d2fe;
+    box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.05);
+    border-color: #93c5fd;
 }
 
 .exam-card h3 {
@@ -170,10 +170,10 @@
 }
 
 .action-btn:hover {
-    background: var(--primary-gradient);
+    background: var(--accent-glow);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
 .manager-layout {

@@ -2,12 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-color: #f0f4f8; /* Soft blue-gray */
+    --bg-color: #f8fafc; /* Professional cool gray */
     --card-bg: #ffffff;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --accent-glow: #6366f1; /* Vibrant Indigo */
-    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); /* Vibrant purple/indigo gradient */
+    --text-primary: #0f172a; /* Deep Navy */
+    --text-secondary: #475569; /* Slate Gray */
+    --accent-glow: #2563eb; /* Professional Royal Blue */
+    --primary-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Elegant Slate gradient */
     --error-color: #ef4444;
     --success-color: #10b981;
 }
@@ -20,8 +20,8 @@
 }
 
 body {
-    /* Beautiful, subtle vibrant background */
-    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+    /* Clean, professional academic background */
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     background-size: cover;
     color: var(--text-primary);
     min-height: 100vh;
@@ -93,18 +93,19 @@ body {
     padding: 1rem;
     border: none;
     border-radius: 10px;
-    background: var(--primary-gradient);
+    background: var(--accent-glow);
     color: white;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -3px rgba(99, 102, 241, 0.5);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .auth-footer {
