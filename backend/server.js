@@ -30,7 +30,7 @@ app.use('/', express.static(path.join(__dirname, '../frontend')));
 // Simple test route to verify the database connection
 app.get('/api/test-db', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT 1 + 1 AS solution');
+        const { rows } = await db.query('SELECT 1 + 1 AS solution');
         res.json({ 
             message: 'Database connected successfully!', 
             result: rows[0].solution 

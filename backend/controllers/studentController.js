@@ -5,37 +5,31 @@ const { db } = require('../db');
 // @route   GET /api/student/exams
 const getAvailableExams = async (req, res) => {
     try {
-        // Fetch all exams from the database
-        const [exams] = await db.query('SELECT id, title, subject, duration_minutes, created_at FROM exams ORDER BY created_at DESC');
-        res.status(200).json(exams);
+        const { rows } = await db.query('SELECT id, title, subject, duration_minutes, created_at FROM exams ORDER BY created_at DESC');
+        res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching exams:', error);
         res.status(500).json({ error: 'Server error while fetching exams' });
     }
 };
 
-// @desc    Get exam questions by ID (HIDING the correct answers!)
+// @desc    Get exam details by ID
 // @route   GET /api/student/exams/:examId
 const getExamDetails = async (req, res) => {
     try {
         const { examId } = req.params;
 
-        // 1. Get the exam details
-        const [exams] = await db.query('SELECT * FROM exams WHERE id = ?', [examId]);
+        const { rows: exams } = await db.query('SELECT * FROM exams WHERE id = $1', [examId]);
         if (exams.length === 0) {
             return res.status(404).json({ error: 'Exam not found' });
         }
         const exam = exams[0];
 
-        // 2. Get the questions
-        const [questions] = await db.query('SELECT id, question_text FROM questions WHERE exam_id = ?', [examId]);
+        const { rows: questions } = await db.query('SELECT id, question_text FROM questions WHERE exam_id = $1', [examId]);
 
-        // 3. For each question, attach its options
-        // NOTE: Notice how we DO NOT select the 'is_correct' column.
-        // If we send 'is_correct' to the frontend, tech-savvy students could cheat by inspecting the network response!
         for (let i = 0; i < questions.length; i++) {
-            const [options] = await db.query(
-                'SELECT id, option_text FROM options WHERE question_id = ?', 
+            const { rows: options } = await db.query(
+                'SELECT id, option_text FROM options WHERE question_id = $1', 
                 [questions[i].id]
             );
             questions[i].options = options;
@@ -51,17 +45,15 @@ const getExamDetails = async (req, res) => {
     }
 };
 
-// @desc    Submit an exam and calculate the score
+// @desc    Submit an exam
 // @route   POST /api/student/exams/:examId/submit
 const submitExam = async (req, res) => {
     try {
         const { examId } = req.params;
         const studentId = req.user.id;
         const { answers } = req.body; 
-        // Expected 'answers' format from frontend: { "questionId_1": "optionId_A", "questionId_2": "optionId_C", ... }
 
-        // Fetch all questions to calculate total score
-        const [questions] = await db.query('SELECT id FROM questions WHERE exam_id = ?', [examId]);
+        const { rows: questions } = await db.query('SELECT id FROM questions WHERE exam_id = $1', [examId]);
         const totalQuestions = questions.length;
 
         if (totalQuestions === 0) {
@@ -70,27 +62,24 @@ const submitExam = async (req, res) => {
 
         let score = 0;
 
-        // Result calculation logic: Loop through the core questions and check their answers
         for (const q of questions) {
             const qId = q.id;
             const submittedOptionId = answers[qId];
 
             if (submittedOptionId) {
-                // Check if the submitted option is indeed the correct one
-                const [opts] = await db.query(
-                    'SELECT is_correct FROM options WHERE id = ? AND question_id = ?', 
+                const { rows: opts } = await db.query(
+                    'SELECT is_correct FROM options WHERE id = $1 AND question_id = $2', 
                     [submittedOptionId, qId]
                 );
                 
-                if (opts.length > 0 && opts[0].is_correct === 1) {
+                if (opts.length > 0 && opts[0].is_correct === true) {
                     score++;
                 }
             }
         }
 
-        // Save the score in the database
-        const [result] = await db.query(
-            'INSERT INTO results (student_id, exam_id, score, total_questions) VALUES (?, ?, ?, ?)',
+        await db.query(
+            'INSERT INTO results (student_id, exam_id, score, total_questions) VALUES ($1, $2, $3, $4)',
             [studentId, examId, score, totalQuestions]
         );
 
@@ -106,34 +95,31 @@ const submitExam = async (req, res) => {
     }
 };
 
-// @desc    Get the student's result history
-// @route   GET /api/student/results
+// @desc    Get result history
 const getStudentResults = async (req, res) => {
     try {
         const studentId = req.user.id;
         
-        // Use a JOIN to attach the exam title and subject to the result data
-        const [results] = await db.query(`
+        const { rows } = await db.query(`
             SELECT r.id, r.score, r.total_questions, r.remarks, r.submitted_at, e.title, e.subject 
             FROM results r
             JOIN exams e ON r.exam_id = e.id
-            WHERE r.student_id = ?
+            WHERE r.student_id = $1
             ORDER BY r.submitted_at DESC
         `, [studentId]);
 
-        res.status(200).json(results);
+        res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching results:', error);
         res.status(500).json({ error: 'Server error while fetching results' });
     }
 };
 
-// --- ADVANCED PHASE 2 METHODS ---
 const createComplaint = async (req, res) => {
     try {
         const studentId = req.user.id;
         const { subject, message } = req.body;
-        await db.query('INSERT INTO complaints (student_id, subject, message) VALUES (?, ?, ?)', [studentId, subject, message]);
+        await db.query('INSERT INTO complaints (student_id, subject, message) VALUES ($1, $2, $3)', [studentId, subject, message]);
         res.status(201).json({ message: 'Complaint submitted successfully' });
     } catch (error) {
         console.error('Error creating complaint:', error);
@@ -144,8 +130,8 @@ const createComplaint = async (req, res) => {
 const getStudentComplaints = async (req, res) => {
     try {
         const studentId = req.user.id;
-        const [complaints] = await db.query('SELECT * FROM complaints WHERE student_id = ? ORDER BY created_at DESC', [studentId]);
-        res.status(200).json(complaints);
+        const { rows } = await db.query('SELECT * FROM complaints WHERE student_id = $1 ORDER BY created_at DESC', [studentId]);
+        res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching complaints:', error);
         res.status(500).json({ error: 'Server error' });
@@ -160,3 +146,4 @@ module.exports = {
     createComplaint,
     getStudentComplaints
 };
+
