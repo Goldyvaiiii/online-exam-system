@@ -19,18 +19,28 @@ console.log('------------------------------');
 
 // Create a connection pool
 // We support both a single DATABASE_URL (common in cloud) or individual parameters
-const pool = process.env.DATABASE_URL 
-    ? mysql.createPool(process.env.DATABASE_URL)
-    : mysql.createPool({
+const isCloud = !!process.env.DATABASE_URL;
+
+const poolConfig = isCloud 
+    ? { 
+        uri: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false } // Required for Aiven/TiDB/Planetary Scale
+      }
+    : {
         host: process.env.DB_HOST || 'localhost',
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || '',
-        database: process.env.DB_NAME || 'online_exam',
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        connectTimeout: 10000 
-    });
+        database: process.env.DB_NAME || 'online_exam'
+    };
+
+const pool = mysql.createPool({
+    ...poolConfig,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    connectTimeout: 10000 
+});
+
 
 
 // We use the promise wrapper so we can use modern async/await syntax when querying the database.
