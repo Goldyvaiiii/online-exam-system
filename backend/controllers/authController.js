@@ -1,7 +1,7 @@
 // backend/controllers/authController.js
 // This file handles the logic for user registration and login
 
-const db = require('../db');
+const { db } = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -38,8 +38,12 @@ const register = async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully!', userId: result.insertId });
     } catch (error) {
-        console.error('Registration Error:', error);
-        res.status(500).json({ error: 'Server error during registration' });
+        console.error('Registration Error:', error.message);
+        console.error('Full Stack Trace:', error.stack);
+        res.status(500).json({ 
+            error: 'Server error during registration', 
+            details: error.message 
+        });
     }
 };
 
@@ -89,8 +93,12 @@ const login = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Login Error:', error);
-        res.status(500).json({ error: 'Server error during login' });
+        console.error('Login Error:', error.message);
+        console.error('Full Stack Trace:', error.stack);
+        res.status(500).json({ 
+            error: 'Server error during login', 
+            details: error.message 
+        });
     }
 };
 

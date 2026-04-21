@@ -39,7 +39,10 @@ if (registerForm) {
             const data = await response.json();
 
             // If status is not 2xx, throw an error
-            if (!response.ok) throw new Error(data.error || 'Registration failed');
+            if (!response.ok) {
+                const errorText = data.details ? `${data.error}: ${data.details}` : (data.error || 'Registration failed');
+                throw new Error(errorText);
+            }
 
             showMessage('Registration successful! Redirecting to login...', false);
             
@@ -73,7 +76,10 @@ if (loginForm) {
 
             const data = await response.json();
 
-            if (!response.ok) throw new Error(data.error || 'Login failed');
+            if (!response.ok) {
+                const errorText = data.details ? `${data.error}: ${data.details}` : (data.error || 'Login failed');
+                throw new Error(errorText);
+            }
 
             showMessage('Authentication successful. Initializing dashboard...', false);
             

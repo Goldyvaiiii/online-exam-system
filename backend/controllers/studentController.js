@@ -1,5 +1,5 @@
 // backend/controllers/studentController.js
-const db = require('../db');
+const { db } = require('../db');
 
 // @desc    Get all available exams
 // @route   GET /api/student/exams

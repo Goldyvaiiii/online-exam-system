@@ -1,7 +1,7 @@
 // backend/controllers/teacherController.js
 // This handles everything related to teachers managing exams and questions.
 
-const db = require('../db');
+const { db } = require('../db');
 
 // @desc    Create a new exam
 // @route   POST /api/teacher/exams
