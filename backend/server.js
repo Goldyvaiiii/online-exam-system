@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { db, testConnection } = require('./db');
+const { db, initDatabase } = require('./db');
 const authRoutes = require('./routes/authRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
 const studentRoutes = require('./routes/studentRoutes');
@@ -27,27 +27,30 @@ app.use('/api/student', studentRoutes);
 // Serve the frontend files statically
 app.use('/', express.static(path.join(__dirname, '../frontend')));
 
-// Simple test route to verify the database connection
-app.get('/api/test-db', async (req, res) => {
-    try {
-        const { rows } = await db.query('SELECT 1 + 1 AS solution');
-        res.json({ 
-            message: 'Database connected successfully!', 
-            result: rows[0].solution 
+// Health Check & Diagnostic Route
+app.get('/api/status', async (req, res) => {
+    const status = await initDatabase();
+    if (status.success) {
+        res.json({
+            status: '🟢 Ready',
+            database: 'Connected',
+            tables: 'Verified/Created',
+            message: 'Everything is working! You are ready for tonight.'
         });
-    } catch (error) {
-        console.error('Database diagnostic route failed:', error);
-        res.status(500).json({ error: 'Database connection failed', details: error.message });
+    } else {
+        res.status(500).json({
+            status: '🔴 Issues Detected',
+            error: status.error,
+            tip: 'Check your DATABASE_URL in Render settings!'
+        });
     }
 });
 
 // Start the server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
-    
-    // Test the database connection on startup
-    console.log('Testing database connection...');
-    await testConnection();
+    console.log(`🚀 Server is running on port ${PORT}`);
+    // Auto-initialize database on startup
+    await initDatabase();
 });
 

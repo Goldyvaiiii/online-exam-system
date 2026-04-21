@@ -33,24 +33,44 @@ const pool = new Pool({
     connectionTimeoutMillis: 10000 
 });
 
-// Function to test the database connection
-const testConnection = async () => {
+const fs = require('fs');
+const path = require('path');
+
+// Function to test the database connection and auto-initialize tables
+const initDatabase = async () => {
     try {
         const client = await pool.connect();
         console.log('✅ PostgreSQL connected successfully!');
+        
+        // Check if tables already exist (by looking for 'users' table)
+        const checkTableQuery = "SELECT 1 FROM information_schema.tables WHERE table_name = 'users'";
+        const tableCheck = await client.query(checkTableQuery);
+
+        if (tableCheck.rows.length === 0) {
+            console.log('🚀 Database is empty. Running schema.sql to initialize tables...');
+            const schemaPath = path.join(__dirname, '../schema.sql');
+            const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+            
+            // Execute the schema (Postgres can run multiple statements separated by ;)
+            await client.query(schemaSql);
+            console.log('✨ Database tables and sample data initialized!');
+        } else {
+            console.log('📚 Database tables already exist.');
+        }
+
         client.release();
-        return true;
+        return { success: true, message: 'Connected & Initialized' };
     } catch (err) {
-        console.error('❌ PostgreSQL connection failed!');
+        console.error('❌ Database Initialization Failed!');
         console.error('Error details:', err.message);
-        return false;
+        return { success: false, error: err.message };
     }
 };
 
-// For Postgres, we don't need .promise() because pg already returns promises for .query()
 module.exports = {
     db: pool,
-    testConnection
+    initDatabase
 };
+
 
 
